@@ -29,5 +29,5 @@ configurations.configureEach {
             because("Patched parser limits; keep the 3.x ABI used by Android tooling")
         }
     }
-    resolutionStrategy.force("com.google.guava:guava:33.7.2-android", "com.google.guava:failureaccess:1.0.3")
+    resolutionStrategy.force("com.google.guava:guava:33.8.0-android", "com.google.guava:failureaccess:1.0.3")
 }
