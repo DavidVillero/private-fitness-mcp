@@ -1,0 +1,8 @@
+{
+  "backend": "mysql",
+  "host": "127.0.0.1",
+  "port": 13307,
+  "database": "fitness",
+  "reader": {"user": "fitness_reader", "password_file": "secrets/mysql/reader-password"},
+  "writer": {"user": "fitness_writer", "password_file": "secrets/mysql/writer-password"}
+}

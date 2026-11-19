@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:8776",
+  "data_dir": "/absolute/path/to/private-fitness/services/personal-context/data",
+  "fitness_project": "/absolute/path/to/private-fitness/services/private-fitness-mcp",
+  "credentials": {
+    "read": "/absolute/path/to/private-fitness/services/personal-context/secrets/read-token",
+    "write": "/absolute/path/to/private-fitness/services/personal-context/secrets/write-token"
+  }
+}

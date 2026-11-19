@@ -1,0 +1,87 @@
+# New installation only. Deliberately distinct from the original deployment name.
+name: private-fitness-example
+services:
+  mysql:
+    image: private-fitness-mysql:local
+    build:
+      context: ..
+      dockerfile: deploy/mysql.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FITNESS_MYSQL_PORT:-13307}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql-root
+      MYSQL_DATABASE: fitness
+      MYSQL_INITDB_SKIP_TZINFO: "1"
+    secrets: [mysql-root]
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ../services/private-fitness-mcp/secrets/mysql/init.sql:/docker-entrypoint-initdb.d/01-fitness.sql:ro
+    command: ["--general-log=OFF", "--slow-query-log=OFF", "--local-infile=OFF", "--max-allowed-packet=16M"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    logging:
+      driver: local
+      options: {max-size: "10m", max-file: "3"}
+  dashboard:
+    profiles: [dashboard]
+    build: ..
+    restart: unless-stopped
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    ports: ["127.0.0.1:8787:8787"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    environment:
+      HQ_DB_HOST: mysql
+      HQ_DB_PORT: "3306"
+      HQ_ORIGIN: "${HQ_ORIGIN:-https://fitness.example.invalid:9443}"
+      HQ_OWNER: "${HQ_OWNER:-owner@example.invalid}"
+      HQ_STATE: /state
+      FITNESS_TIMEZONE: "${FITNESS_TIMEZONE:-UTC}"
+    depends_on:
+      mysql: {condition: service_healthy}
+    volumes:
+      - ../data/dashboard:/state
+    secrets: [reader, logs]
+  # Stronger boundary for a real private deployment: no TCP listener is
+  # published on the host. Only the owner-protected Unix socket is shared with
+  # the host's Tailscale Serve process on native Linux. The bind-mounted socket
+  # fails chmod on the tested Docker Desktop/macOS host; see docs/setup.md.
+  dashboard-private:
+    profiles: [dashboard-private]
+    build: ..
+    restart: unless-stopped
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    command: ["python", "serve_dashboard_socket.py"]
+    environment:
+      HQ_DB_HOST: mysql
+      HQ_DB_PORT: "3306"
+      HQ_ORIGIN: "${HQ_ORIGIN:-https://fitness.example.invalid:9443}"
+      HQ_OWNER: "${HQ_OWNER:-owner@example.invalid}"
+      HQ_STATE: /state
+      FITNESS_TIMEZONE: "${FITNESS_TIMEZONE:-UTC}"
+    depends_on:
+      mysql: {condition: service_healthy}
+    volumes:
+      - ../data/dashboard:/state
+      - ../data/dashboard/sockets:/sockets
+    secrets: [reader, logs]
+secrets:
+  mysql-root:
+    file: ../services/private-fitness-mcp/secrets/mysql/root-password
+  reader:
+    file: ../services/private-fitness-mcp/secrets/mysql/reader-password
+  logs:
+    file: ../services/private-fitness-mcp/secrets/mysql/logs-password
+volumes:
+  mysql-data:

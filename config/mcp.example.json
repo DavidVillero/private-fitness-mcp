@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "private-fitness": {
+      "command": "/absolute/path/to/private-fitness/scripts/run",
+      "args": ["dashboard-mcp", "--scope", "read"]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mcp_servers:
+  private-fitness:
+    command: /absolute/path/to/private-fitness/scripts/run
+    args: [combined-mcp, --scope, read]
+    enabled: true

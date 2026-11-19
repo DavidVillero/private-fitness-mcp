@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "endpoint": "https://fitness.example.invalid:8443/v1/ingest",
+  "token": "DUMMY_ONLY_REPLACE_WITH_LOCAL_PAIRING_TOKEN"
+}

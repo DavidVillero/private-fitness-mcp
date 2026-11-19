@@ -1,0 +1,10 @@
+[project]
+name = "personal-context"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = ["fastapi==0.163.1", "starlette==1.10.0", "pydantic==2.12.4", "uvicorn==0.40.0", "httpx==0.28.1"]
+[project.optional-dependencies]
+test = ["pytest==9.0.3"]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

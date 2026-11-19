@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>local.private-fitness.example-job</string>
+  <key>ProgramArguments</key>
+  <array><string>/absolute/path/to/private-fitness/scripts/run</string><string>reports</string></array>
+  <key>WorkingDirectory</key><string>/absolute/path/to/private-fitness</string>
+  <key>RunAtLoad</key><true/>
+  <key>StartInterval</key><integer>3600</integer>
+  <key>Umask</key><integer>63</integer>
+  <key>StandardOutPath</key><string>/absolute/path/to/private-fitness/logs/reports.out.log</string>
+  <key>StandardErrorPath</key><string>/absolute/path/to/private-fitness/logs/reports.err.log</string>
+</dict>
+</plist>

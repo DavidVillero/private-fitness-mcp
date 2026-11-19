@@ -1,0 +1,11 @@
+**
+!app.py
+!serve_dashboard_socket.py
+!requirements.lock
+!static/
+!static/**
+!services/
+!services/private-fitness-mcp/
+!services/private-fitness-mcp/fitness/
+!services/private-fitness-mcp/fitness/*.py
+!Dockerfile
